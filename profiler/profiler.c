@@ -11,12 +11,12 @@
 profiler_t global_profilers[MAX_PROFILER_NUM];
 
 char *event_type_tostr(enum event_type e) {
-  switch (e) {
-  case E2E:
-    return "end to end";
-  default:
+  static char* event_name[] = {"end_to_end"};
+  if(e>MAX_PROFILER_NUM) {
     return "undefined event";
   }
+
+  return event_name[e];
 }
 
 void timespec_tostr(struct timespec *ts, char buf[], size_t len);
