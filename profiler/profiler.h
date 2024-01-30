@@ -10,8 +10,8 @@ struct profiler_t {
 typedef struct profiler_t profiler_t;
 
 enum event_type {
-  E2E,
-  MAX_PROFILER_NUM
+#define EVENT_ENUM(x) x,
+#include "event.def"
 };
 
 extern profiler_t global_profilers[MAX_PROFILER_NUM];

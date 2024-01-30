@@ -1,0 +1,9 @@
+// event.def
+#ifndef EVENT_ENUM
+#define EVENT_ENUM(...)
+#endif
+
+EVENT_ENUM(E2E)
+EVENT_ENUM(MAX_PROFILER_NUM)
+
+#undef EVENT_ENUM
