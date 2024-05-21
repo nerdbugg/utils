@@ -13,14 +13,9 @@ typedef struct worker_thr_args worker_thr_args;
 
 void* worker_thr(void* args) {
   worker_thr_args* arg = (worker_thr_args*)args;
-  for (int i=0; i<arg->n; i++) {
-    get_header_ref(arg->headers[i]);
-    header *h=arg->headers[i];
-    print_header(h);
-  }
 
   for(int i=0;i<arg->n;i++) {
-    // NOTE: get_ref is called in above loop
+    // NOTE: get_ref is called before thread execute, lifetime has been extended
     header* h = arg->headers[i];
     sleep(rand()%10); /* wait for seconds */
     // NOTE: sub-thread put ref
@@ -42,25 +37,22 @@ int main(int argc, char *argv[]) {
   headers[2]->name = "weight";
   headers[2]->value = "150";
 
-  // NOTE: get ref here, extend the life time safely
   // NOTE: read shared_ptr impl
+
+  // NOTE: get ref here, extend the life time safely
+  for(int i=0;i<3;i++) {
+    get_header_ref(headers[i]);
+  }
   worker_thr_args args = {headers, 3};
   pthread_t t;
   pthread_create(&t, NULL, worker_thr, &args);
 
-  // ending main thread lifetime
+  // NOTE: ending main thread lifetime
   for(int i=0;i<3;i++) {
     put_header_ref(headers[i]);
   }
 
   pthread_join(t, NULL);
-
-  /*
-  cleaning, main thread put ref
-  for(int i=0;i<3;i++) {
-    put_header_ref(headers[i]);
-  }
-  */
 
   return EXIT_SUCCESS; 
 }

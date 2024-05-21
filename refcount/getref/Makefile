@@ -6,7 +6,7 @@ CFLAGS=-g -fsanitize=address
 CXXFLAGS=-g
 
 
-PROGRAMS=main shareptr
+PROGRAMS=main
 
 all: $(PROGRAMS)
 
@@ -18,12 +18,6 @@ main.o: main.c
 
 header.o: header.c
 	$(CC) $(CFLAGS) -c -o $@ $^
-
-shareptr: shareptr.o
-	$(CXX) $(CXXFLAGS) -o $@ $^
-
-shareptr.o: shareptr.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $^
 
 clean:
 	rm -f *.o $(PROGRAMS)
